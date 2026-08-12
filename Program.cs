@@ -1,6 +1,7 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using OpenIddict.Validation.AspNetCore;
 using ShopApi.Data;
 using ShopApi.Entities.Idendity;
@@ -43,7 +44,42 @@ builder.Services.AddAuthorization();
 
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    // Le bouton Authorize obtient le token AUPRÈS DU SERVEUR D'AUTH (autre port),
+    // d'où l'URL absolue vers http://localhost:5124/connect/token.
+    options.AddSecurityDefinition("OAuth2", new OpenApiSecurityScheme
+    {
+        Type = SecuritySchemeType.OAuth2,
+        Flows = new OpenApiOAuthFlows
+        {
+            Password = new OpenApiOAuthFlow
+            {
+                TokenUrl = new Uri("http://localhost:5124/connect/token"),
+                Scopes = new Dictionary<string, string>
+                {
+                    ["openid"] = "Identifiant OpenID",
+                    ["shop_api"] = "Accès à ShopApi"
+                }
+            }
+        }
+    });
+
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "OAuth2"
+                }
+            },
+            new[] { "openid", "shop_api" }
+        }
+    });
+});
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
@@ -56,7 +92,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.OAuthClientId("postman");
+        options.OAuthScopes("openid", "shop_api");
+    });
 }
 
 app.UseHttpsRedirection();
