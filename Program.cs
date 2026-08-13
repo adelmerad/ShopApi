@@ -103,9 +103,6 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Petite interface cliente (SPA) : login SSO + liste/ajout de produits.
-app.MapGet("/app", () => Results.Content(ShopApi.ClientApp.Html, "text/html"));
-
 // Endpoint de démo protégé : renvoie les claims du token présenté.
 app.MapGet("/api/me", (ClaimsPrincipal user) =>
     Results.Ok(user.Claims.Select(c => new { c.Type, c.Value })))
