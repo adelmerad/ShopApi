@@ -2,7 +2,7 @@
 
 API REST e-commerce développée pendant mon stage chez Mobilis (encadrant : Ibrahim).
 
-Depuis l'intégration du SSO, ShopApi est un **serveur de ressources** : il ne gère pas de login lui-même, il **valide les access tokens** émis par le serveur d'authentification (**AuthApiTest**) et protège ses endpoints d'écriture.
+Depuis l'intégration du SSO, ShopApi est un **serveur de ressources** : il ne gère pas de login lui-même, il **valide les access tokens** émis par le serveur d'authentification (**ShopAuth**) et protège ses endpoints d'écriture.
 
 ## Stack
 
@@ -19,7 +19,7 @@ Depuis l'intégration du SSO, ShopApi est un **serveur de ressources** : il ne g
 - Il n'accepte que les tokens dont l'`issuer` = `http://localhost:5124/` **et** l'`aud` contient `shop_api`.
 - Endpoints de **lecture** (`GET`) publics ; endpoints d'**écriture** (`POST`) et `/api/me` protégés par `[Authorize]`.
 
-> Prérequis : le serveur d'auth (**AuthApiTest**) doit tourner sur `http://localhost:5124` (pour la découverte OIDC et les clés).
+> Prérequis : le serveur d'auth (**ShopAuth**) doit tourner sur `http://localhost:5124` (pour la découverte OIDC et les clés).
 
 ## Lancer le projet
 
@@ -41,7 +41,7 @@ dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=localhost,
 dotnet ef database update
 ```
 
-4. Démarrer **AuthApiTest** (port 5124), puis lancer ShopApi (F5) → Swagger s'ouvre (port 5050).
+4. Démarrer **ShopAuth** (port 5124), puis lancer ShopApi (F5) → Swagger s'ouvre (port 5050).
 
 ## Tester dans Swagger
 
