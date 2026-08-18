@@ -24,15 +24,23 @@ builder.Services.AddAuthentication(options =>
     options.DefaultChallengeScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
 });
 
+// Configurable via appsettings.json (section "Sso"), pas écrit en dur — permet
+// de basculer temporairement vers un autre serveur d'auth (ex: test SSO croisé
+// avec le binôme) sans toucher au code. Voir appsettings.Example.json.
+var ssoIssuer = builder.Configuration["Sso:Issuer"] ?? "http://localhost:5124/";
+var ssoAudience = builder.Configuration["Sso:Audience"]; // absent -> pas de restriction d'audience
+
 builder.Services.AddOpenIddict()
     .AddValidation(options =>
     {
         // Le serveur d'auth qui a émis les tokens (doit matcher le claim "iss").
-        options.SetIssuer("http://localhost:5124/");
+        options.SetIssuer(ssoIssuer);
 
-
-        // On n'accepte QUE les tokens dont l'audience contient "shop_api".
-        options.AddAudiences("shop_api");
+        // On n'accepte QUE les tokens dont l'audience matche, SI on en a exigé une
+        // (le serveur du binôme n'a pas de scope "shop_api", donc pas de check ici
+        // quand on est branché sur lui).
+        if (!string.IsNullOrEmpty(ssoAudience))
+            options.AddAudiences(ssoAudience);
 
         // Va chercher la config OIDC + les clés publiques (JWKS) via HTTP.
         options.UseSystemNetHttp();
