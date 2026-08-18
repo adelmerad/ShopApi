@@ -146,4 +146,15 @@ app.MapPost("/api/products", async (Product product, AplicationDBContext db) =>
     return Results.Created($"/api/products/{product.Id}", product);
 }).RequireAuthorization();
 
+app.MapDelete("/api/products/{id}", async (int id, AplicationDBContext db) =>
+{
+    var product = await db.Products.FindAsync(id);
+    if (product is null)
+        return Results.NotFound();
+
+    db.Products.Remove(product);
+    await db.SaveChangesAsync();
+    return Results.NoContent();
+}).RequireAuthorization();
+
 app.Run();
