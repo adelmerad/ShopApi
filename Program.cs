@@ -30,6 +30,7 @@ builder.Services.AddOpenIddict()
         // Le serveur d'auth qui a émis les tokens (doit matcher le claim "iss").
         options.SetIssuer("http://localhost:5124/");
 
+
         // On n'accepte QUE les tokens dont l'audience contient "shop_api".
         options.AddAudiences("shop_api");
 
@@ -55,7 +56,7 @@ builder.Services.AddSwaggerGen(options =>
         {
             Password = new OpenApiOAuthFlow
             {
-                TokenUrl = new Uri("http://localhost:5124/connect/token"),
+                TokenUrl = new Uri("http://172.20.10.5:5171/connect/token"),
                 Scopes = new Dictionary<string, string>
                 {
                     ["openid"] = "Identifiant OpenID",
