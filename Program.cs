@@ -124,11 +124,14 @@ app.MapPost("/api/categories", async (Category category, AplicationDBContext db)
     db.Categories.Add(category);
     await db.SaveChangesAsync();
     return Results.Created($"/api/categories/{category.Id}", category);
-}).RequireAuthorization();
+}).RequireAuthorization(policy => policy.RequireRole(["admin" ,"employe"]));
 
 
 app.MapGet("/api/products", async (AplicationDBContext db) =>
-    await db.Products.Include(p => p.Category).ToListAsync());
+{
+    await db.Products.Include(p => p.Category).ToListAsync();
+}).RequireAuthorization();
+
 
 app.MapGet("/api/products/{id}", async (int id, AplicationDBContext db) =>
 {
