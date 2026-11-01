@@ -1,6 +1,6 @@
 # ShopApi
 
-> **Projet retiré.** Ce dépôt n'est plus maintenu : sa logique a été fusionnée dans [ShopWebApp](https://github.com/adelmerad/ShopWebApp).
+> **Ancienne version.** La version actuelle du projet se trouve dans [ShopWebApp](https://github.com/adelmerad/ShopWebApp).
 
 API REST e-commerce développée pendant mon stage chez Mobilis (encadrant : Ibrahim).
 
