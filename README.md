@@ -1,5 +1,7 @@
 # ShopApi
 
+> **Projet retiré.** Ce dépôt n'est plus maintenu : sa logique a été fusionnée dans [ShopWebApp](https://github.com/adelmerad/ShopWebApp).
+
 API REST e-commerce développée pendant mon stage chez Mobilis (encadrant : Ibrahim).
 
 Depuis l'intégration du SSO, ShopApi est un **serveur de ressources** : il ne gère pas de login lui-même, il **valide les access tokens** émis par le serveur d'authentification (**ShopAuth**) et protège ses endpoints d'écriture.
